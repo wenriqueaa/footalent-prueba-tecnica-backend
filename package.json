@@ -4,7 +4,9 @@
   "description": "Desarrollo en respuesta a Prueba Tecnica Full Stack - Smart projects 4° Edicion de Foo Talent Group. 17112024",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "dev": "nodemon index.js",
+  "test": "echo \"Error: no test specified\" && exit 1"
+   
   },
   "author": "Enrique Avendaño Ardila",
   "license": "ISC",
