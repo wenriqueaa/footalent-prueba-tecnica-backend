@@ -20,23 +20,29 @@ const getAllProductos = async (req, res) => {
 
 // Crear un producto
 const createProducto = async (req, res) => {
-  try {
-    const nuevoProducto = new Producto(req.body);
-    await nuevoProducto.save();
-    res.status(201).json(nuevoProducto);
-  } catch (error) {
-    if (error.code === 11000) {
-      res.status(400).json({ message: 'El nombre del producto ya existe' });
-    } else {
-      res.status(500).json({ message: 'Error al crear el producto', error });
+    try {
+        const nuevoProducto = new Producto(req.body);
+        await nuevoProducto.save();
+        res.status(201).json(nuevoProducto);
+    } catch (error) {
+        if (error.code === 11000) {
+            res.status(400).json({
+                ok: false,
+                message: 'El nombre del producto ya existe'
+            });
+        } else {
+            res.status(500).json({
+                ok: false,
+                message: 'Error al crear el producto', error
+            });
+        }
     }
-  }
 }
 
 // modificar una producto por el id
 const updateProductoById = async (req, res) => {
     const { id } = req.params;
-    const { productonombre,  productodescripcion, productoprecio, productocategoria, productostock } = req.body
+    const { productonombre, productodescripcion, productoprecio, productocategoria, productostock } = req.body
     try {
         const updateDataById = {};
         if (productonombre) updateDataById.productonombre = productonombre;
@@ -89,9 +95,34 @@ const deleteProductoById = async (req, res) => {
     }
 }
 
+// Buscar incidencia por Id
+const getProductoById = async (req, res) => {
+    const id = req.params.id
+    try {
+        const producto = await Producto.findById({ _id: id })
+        if (!producto) return res.status(404).json({
+            ok: false,
+            msg: `No fue encontrado producto para ${id}`
+        })
+        return res.status(200).json({
+            ok: true,
+            msg: 'Encontrado producto',
+            producto: producto
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            ok: false,
+            msg: 'No fue encontrado producto, por favor contactar a soporte'
+        })
+    }
+}
+
+
 module.exports = {
     getAllProductos,
     createProducto,
     updateProductoById,
-   deleteProductoById
- }
+    deleteProductoById,
+    getProductoById
+}
